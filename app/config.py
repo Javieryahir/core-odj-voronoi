@@ -15,7 +15,7 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET", "")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-2")
 
-# CORS — add your Amplify domain here
+# CORS — frontend Amplify + local dev
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,https://main.d22y6a7qhuis5g.amplifyapp.com"
