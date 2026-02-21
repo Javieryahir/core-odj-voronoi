@@ -2,7 +2,7 @@
 
 API básica con FastAPI en Docker.
 
-CI/CD triger and test
+CI/CD trdddiger and test
 
 ## Endpoint
 
