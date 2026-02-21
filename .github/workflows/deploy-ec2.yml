@@ -9,17 +9,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Install SSH key
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      - name: Prepare SSH key
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          printf '%s\n' "$EC2_SSH_KEY" > key.pem
+          chmod 600 key.pem
 
       - name: Deploy to EC2
         env:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
-          ssh -o StrictHostKeyChecking=no "${EC2_USER}@${EC2_HOST}" '
+          ssh -o StrictHostKeyChecking=no -i key.pem "${EC2_USER}@${EC2_HOST}" '
             set -euo pipefail
 
             cd ~/core-odj-voronoi
