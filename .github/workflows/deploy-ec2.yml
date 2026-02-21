@@ -30,12 +30,12 @@ jobs:
             git checkout main
             git reset --hard origin/main
 
-            docker build -t core-odj-voronoi-api . || true
-            docker-compose -p core-odj-voronoi down --remove-orphans || true
+            docker build -t core-odj-voronoi-api .
+            docker-compose -p core-odj-voronoi -f docker-compose.ec2.yml down --remove-orphans || true
 
             if [ -f .env ]; then
-              docker-compose -p core-odj-voronoi --env-file .env up -d --build --remove-orphans
+              docker-compose -p core-odj-voronoi -f docker-compose.ec2.yml --env-file .env up -d --remove-orphans
             else
-              docker-compose -p core-odj-voronoi up -d --build --remove-orphans
+              docker-compose -p core-odj-voronoi -f docker-compose.ec2.yml up -d --remove-orphans
             fi
           '

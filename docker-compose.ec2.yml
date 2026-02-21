@@ -1,7 +1,7 @@
+# Solo para deploy en EC2: usa la imagen ya construida con "docker build", sin build (evita buildx).
 services:
   api:
     image: core-odj-voronoi-api
-    build: .
     ports:
       - "8000:8000"
     restart: unless-stopped
