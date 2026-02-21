@@ -1,0 +1,8 @@
+# Desarrollo: los cambios en el código se ven sin reiniciar el contenedor
+# Uso: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+
+services:
+  api:
+    volumes:
+      - ./app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --workers 1
