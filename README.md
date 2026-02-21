@@ -2,6 +2,8 @@
 
 API básica con FastAPI en Docker.
 
+CI/CD triger and test
+
 ## Endpoint
 
 - **GET /** — Responde `{"mensaje": "Funciona"}`
@@ -40,8 +42,8 @@ Con **Docker** sin Compose (mismo efecto en una línea):
 docker build -t core-odj-voronoi . && docker run -d -p 8000:8000 --restart unless-stopped core-odj-voronoi
 ```
 
-- Navegador: http://localhost:8000  
-- Documentación: http://localhost:8000/docs  
+- Navegador: http://localhost:8000
+- Documentación: http://localhost:8000/docs
 
 El contenedor se reinicia solo si la máquina se reinicia. Ver [DEPLOY_EC2.md](DEPLOY_EC2.md) para desplegar en AWS EC2.
 
