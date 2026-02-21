@@ -19,6 +19,9 @@ app = FastAPI(
     title="NutriScan API",
     description="Analiza estantes de tienda y evalúa la salud nutricional de los productos",
     version="0.1.0",
+    docs_url="/docs",   # Swagger UI
+    redoc_url="/redoc", # ReDoc
+    openapi_url="/openapi.json",
 )
 
 # ── CORS ──────────────────────────────────────────────────────

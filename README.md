@@ -4,9 +4,17 @@ API básica con FastAPI en Docker.
 
 CI/CD trdddiger and test
 
-## Endpoint
+## Endpoints y documentación
 
-- **GET /** — Responde `{"mensaje": "Funciona"}`
+- **GET /** — Health / bienvenida
+- **GET /health** — Health check
+- **POST /analyze** — Analiza imagen de estante
+- **POST /chat** — Chat con contexto de productos
+
+**Documentación (Swagger / ReDoc):** no hace falta instalar nada extra; FastAPI la incluye.
+- **Swagger UI:** http://localhost:8000/docs
+- **ReDoc:** http://localhost:8000/redoc
+- **OpenAPI JSON:** http://localhost:8000/openapi.json
 
 ## Ejecutar con Docker (un solo comando)
 
