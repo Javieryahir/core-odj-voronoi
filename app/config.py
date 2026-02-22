@@ -18,7 +18,7 @@ AWS_REGION = os.getenv("AWS_REGION", "us-east-2")
 # CORS — frontend Amplify + local dev
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
-    "http://localhost:5173,https://main.d22y6a7qhuis5g.amplifyapp.com"
+    "http://localhost:5173,https://main.d22y6a7qhuis5g.amplifyapp.com,https://healthennutrition.com.mx,https://www.healthennutrition.com.mx,https://nutriscan.healthennutrition.com.mx"
 ).split(",")
 
 IS_DEMO = not bool(OPENAI_API_KEY)
