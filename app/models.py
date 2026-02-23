@@ -51,3 +51,6 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
+
+class ProductSegmentationResponse(BaseModel):
+    images: list[str]

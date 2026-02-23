@@ -10,7 +10,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import ALLOWED_ORIGINS, IS_DEMO
-from app.models import AnalyzeResponse, ChatRequest, ChatResponse
+from app.models import AnalyzeResponse, ChatRequest, ChatResponse, ProductSegmentationResponse
 from app.services.vision import analyze_image
 from app.services.chat import chat_with_context
 from app.services.storage import upload_image
@@ -106,3 +106,23 @@ async def chat(request: ChatRequest):
         )
 
     return ChatResponse(reply=reply)
+
+from .services.product_segmentator.product_segmentator import product_segmentation
+
+@app.post("/product-segmentation-test", response_model=ProductSegmentationResponse)
+async def product_segmentation_test(image: UploadFile = File(...)):
+    image_bytes = await image.read()
+
+    if not image_bytes:
+        raise HTTPException(status_code=400, detail="No image provided")
+
+    images = []
+    try:
+        images = product_segmentation(image_bytes)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error analyzing image: {str(e)}",
+        )
+
+    return {"images": images}
