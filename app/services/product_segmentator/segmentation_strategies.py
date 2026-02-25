@@ -52,17 +52,17 @@ class WatershedSeg(SegmentationStrategy):
 #         return labels
 
 
-@register_segment("voronoi")
-class VoronoiSeg(SegmentationStrategy):
+# @register_segment("voronoi")
+# class VoronoiSeg(SegmentationStrategy):
 
-    def segment(self, image, gradient):
-        _, thresh = cv2.threshold(
-            gradient, 0, 255,
-            cv2.THRESH_BINARY + cv2.THRESH_OTSU
-        )
-        dist = cv2.distanceTransform(thresh, cv2.DIST_L2, 5)
-        _, labels = cv2.connectedComponents(
-            (dist > 0).astype(np.uint8)
-        )
-        return labels
+#     def segment(self, image, gradient):
+#         _, thresh = cv2.threshold(
+#             gradient, 0, 255,
+#             cv2.THRESH_BINARY + cv2.THRESH_OTSU
+#         )
+#         dist = cv2.distanceTransform(thresh, cv2.DIST_L2, 5)
+#         _, labels = cv2.connectedComponents(
+#             (dist > 0).astype(np.uint8)
+#         )
+#         return labels
     
