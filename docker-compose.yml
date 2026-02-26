@@ -2,6 +2,11 @@ services:
   api:
     image: core-odj-voronoi-api
     build: .
+    env_file: .env
     ports:
       - "8000:8000"
     restart: unless-stopped
+    volumes:
+      - ./app:/app/app
+      - ./tmp:/app/tmp
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --workers 1

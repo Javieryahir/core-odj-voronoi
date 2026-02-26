@@ -55,15 +55,9 @@ docker build -t core-odj-voronoi . && docker run -d -p 8000:8000 --restart unles
 
 El contenedor se reinicia solo si la máquina se reinicia. Ver [DEPLOY_EC2.md](DEPLOY_EC2.md) para desplegar en AWS EC2.
 
-## Desarrollo: ver cambios sin reiniciar el contenedor
+## Desarrollo: ver cambios sin bajar/subir contenedor
 
-Si quieres que al editar el código (por ejemplo un endpoint) se refleje al instante sin reiniciar el contenedor, usa el modo desarrollo:
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
-```
-
-Se monta tu carpeta `app/` en el contenedor y Uvicorn corre con `--reload`: al guardar un archivo, la API se recarga sola. Para producción sigue usando solo `docker compose up -d --build` (sin el archivo `.dev.yml`).
+Por defecto `docker compose up -d --build` monta `./app` y usa `--reload`: al guardar un archivo, la API se recarga sola. En producción (EC2) se usa `docker-compose.ec2.yml`, que no incluye estas opciones.
 
 ## Uso por varias personas
 
