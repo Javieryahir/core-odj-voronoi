@@ -52,5 +52,20 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     reply: str
 
+
+class ChatImagesRequest(BaseModel):
+    """Request for batch image chat — images as base64 strings, compatible with Chat API."""
+    images: List[str] = Field(..., description="Array of base64-encoded images")
+    message: Optional[str] = Field(
+        None,
+        description="Optional prompt to send with the images (default: analyze nutrition)",
+    )
+
+
+class ChatImagesResponse(BaseModel):
+    """Response from batch image chat — one reply per batch of up to 10 images."""
+    replies: List[str] = Field(..., description="Replies from each batch of images")
+
+
 class ProductSegmentationResponse(BaseModel):
     images: list[str]

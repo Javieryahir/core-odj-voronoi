@@ -2,6 +2,7 @@
 services:
   api:
     image: core-odj-voronoi-api
+    env_file: .env
     ports:
       - "8000:8000"
     restart: unless-stopped

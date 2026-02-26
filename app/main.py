@@ -1,18 +1,26 @@
 """
 NutriScan API
 ─────────────
-POST /analyze   — recibe imagen de estante, regresa productos + info nutricional
-POST /chat      — recibe pregunta + contexto de productos, regresa respuesta
-GET  /health    — health check
+POST /analyze      — recibe imagen de estante, regresa productos + info nutricional
+POST /chat         — recibe pregunta + contexto de productos, regresa respuesta
+POST /chat-images  — recibe arreglo de imágenes base64, llama Chat API en batches de 10 (async)
+GET  /health       — health check
 """
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import ALLOWED_ORIGINS, IS_DEMO
-from app.models import AnalyzeResponse, ChatRequest, ChatResponse, ProductSegmentationResponse
+from app.models import (
+    AnalyzeResponse,
+    ChatRequest,
+    ChatResponse,
+    ChatImagesRequest,
+    ChatImagesResponse,
+    ProductSegmentationResponse,
+)
 from app.services.vision import analyze_image
-from app.services.chat import chat_with_context
+from app.services.chat import chat_with_context, chat_with_images
 from app.services.storage import upload_image
 
 app = FastAPI(
@@ -106,6 +114,32 @@ async def chat(request: ChatRequest):
         )
 
     return ChatResponse(reply=reply)
+
+
+# ── Batch chat with images (async calls per batch of 10) ──
+@app.post("/chat-images", response_model=ChatImagesResponse)
+async def chat_images(request: ChatImagesRequest):
+    """
+    Recibe un arreglo de imágenes (base64) y hace llamadas asíncronas
+    a la Chat API por cada batch de 10 imágenes.
+    """
+    if not request.images:
+        return ChatImagesResponse(replies=[])
+
+    try:
+        replies = await chat_with_images(
+            images=request.images,
+            message=request.message,
+            batch_size=10,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error en chat con imágenes: {str(e)}",
+        )
+
+    return ChatImagesResponse(replies=replies)
+
 
 from .services.product_segmentator.product_segmentator import product_segmentation
 

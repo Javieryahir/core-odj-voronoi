@@ -1,8 +1,13 @@
-# Desarrollo: los cambios en el código se ven sin reiniciar el contenedor
-# Uso: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# Desarrollo: monta ./app en el contenedor + --reload → cambios sin bajar/subir contenedor
+# Uso: docker compose -f docker-compose.dev.yml up -d --build
 
 services:
   api:
+    build: .
+    image: core-odj-voronoi-api
+    env_file: .env
+    ports:
+      - "8000:8000"
     volumes:
       - ./app:/app/app
       - ./tmp:/app/tmp
