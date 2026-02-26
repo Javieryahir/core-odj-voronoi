@@ -8,7 +8,7 @@ GET  /health             — health check
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import ALLOWED_ORIGINS, IS_DEMO
+from app.config import IS_DEMO
 from app.models import AnalyzeResponse
 from app.services.vision import analyze_segmented_images
 from app.services.storage import upload_image
@@ -25,8 +25,8 @@ app = FastAPI(
 # ── CORS ──────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"],  # Proyecto de investigación: acepta cualquier origen
+    allow_credentials=False,  # Obligatorio con allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
