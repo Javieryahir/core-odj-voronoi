@@ -5,7 +5,7 @@ processed in-memory and not persisted.
 """
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from app.config import AWS_S3_BUCKET, AWS_REGION
 
 
@@ -21,7 +21,7 @@ async def upload_image(image_bytes: bytes, content_type: str = "image/jpeg") -> 
         import boto3
 
         s3 = boto3.client("s3", region_name=AWS_REGION)
-        timestamp = datetime.utcnow().strftime("%Y/%m/%d")
+        timestamp = datetime.now(timezone.utc).strftime("%Y/%m/%d")
         key = f"scans/{timestamp}/{uuid.uuid4().hex}.jpg"
 
         s3.put_object(
