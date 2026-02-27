@@ -432,10 +432,42 @@ def get_diagonal_groups(boxes, gap_ratio=0.3, min_group_size=2):
 
 
 # -------------------------------------------------
+# 0) Remove near-full-image boxes
+#    Any box whose area exceeds max_ratio of the
+#    total image area is discarded (background).
+# -------------------------------------------------
+def remove_full_image_boxes(boxes, image_shape, max_ratio=0.9):
+    """
+    Remove boxes that cover too large a fraction of the image.
+
+    Segmentation strategies (e.g. watershed) may produce a region that
+    spans the entire image.  Instead of fixing each strategy, this
+    filter catches any such box at the post-processing stage.
+
+    Args:
+        boxes:       list of (x, y, w, h, area)
+        image_shape: (height, width) of the source image
+        max_ratio:   maximum allowed fraction of image area (default 0.9)
+
+    Returns:
+        Filtered list of boxes.
+    """
+    if not boxes:
+        return []
+
+    img_area = image_shape[0] * image_shape[1]
+    threshold = max_ratio * img_area
+
+    return [b for b in boxes if b[4] < threshold]
+
+
+# -------------------------------------------------
 # Full post-processing pipeline
 # -------------------------------------------------
 def postprocess_boxes(
     boxes,
+    image_shape,
+    max_box_ratio=0.9,
     area_percentile=20,
     iou_merge_threshold=0.3,
     aspect_ratio_sigma=2.0,
@@ -445,6 +477,7 @@ def postprocess_boxes(
 ):
     """
     Apply the full Phase IV post-processing chain in order:
+         0. Remove near-full-image boxes
         1a. Percentile-based area filtering
         1b. Remove fully contained boxes
         1c. Iterative IoU merging
@@ -454,6 +487,7 @@ def postprocess_boxes(
 
     All thresholds are configurable.
     """
+    boxes = remove_full_image_boxes(boxes, image_shape, max_ratio=max_box_ratio)
     boxes = percentile_filter(boxes, percentile=area_percentile)
     boxes = remove_contained(boxes)
     boxes = merge_boxes(boxes, iou_threshold=iou_merge_threshold)
@@ -474,6 +508,7 @@ def draw_bounding_boxes(
     image,
     labels,
     disable_filtering=False,
+    max_box_ratio=0.9,
     area_percentile=20,
     iou_merge_threshold=0.3,
     aspect_ratio_sigma=2.0,
@@ -487,6 +522,8 @@ def draw_bounding_boxes(
     if not disable_filtering:
         boxes = postprocess_boxes(
             boxes,
+            image_shape=image.shape[:2],
+            max_box_ratio=max_box_ratio,
             area_percentile=area_percentile,
             iou_merge_threshold=iou_merge_threshold,
             aspect_ratio_sigma=aspect_ratio_sigma,
@@ -505,6 +542,15 @@ def draw_bounding_boxes(
             2,
         )
 
+    return output
+
+
+def draw_boxes_on_image(image, boxes):
+    """Draw pre-filtered boxes on an image (no filtering applied)."""
+    output = image.copy()
+    for box in boxes:
+        x, y, w, h, _ = box
+        cv2.rectangle(output, (x, y), (x + w, y + h), (0, 255, 0), 2)
     return output
 
 

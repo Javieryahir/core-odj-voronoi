@@ -43,7 +43,18 @@ def folder_to_base64(folder_path: str) -> list[str]:
     return base64_images
 
 
-def product_segmentation(image: bytes, remove_output_files=True, no_box_filtering=False, area_percentile=99.0, iou_merge_threshold=0.3, aspect_ratio_sigma=2.0, duplicate_threshold=0.7, diagonal_gap_ratio=0.3, min_group_size=2) -> None:
+def product_segmentation(
+        image: bytes, 
+        remove_output_files=True, 
+        no_box_filtering=False, 
+        area_percentile=99.0, 
+        iou_merge_threshold=0.3, 
+        aspect_ratio_sigma=2.0, 
+        duplicate_threshold=0.7, 
+        diagonal_gap_ratio=0.3, 
+        min_group_size=2,
+        max_box_ratio=0.9
+        ) -> None:
     img_np = bytes_to_cv2(image)
     if img_np is None:
         raise ValueError("Image not found.")
@@ -60,6 +71,7 @@ def product_segmentation(image: bytes, remove_output_files=True, no_box_filterin
         duplicate_threshold=duplicate_threshold,
         diagonal_gap_ratio=diagonal_gap_ratio,
         min_group_size=min_group_size,
+        max_box_ratio=max_box_ratio,
     )
 
     images = folder_to_base64(os.path.join(output_path, "result-images"))
